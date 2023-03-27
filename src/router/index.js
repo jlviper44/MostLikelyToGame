@@ -12,7 +12,7 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/PlayerView',
+    path: '/PlayerView/:joinCode',
     name: 'PlayerView',
     component: PlayerView
   }

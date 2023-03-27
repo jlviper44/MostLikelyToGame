@@ -12,7 +12,11 @@
     </div>
     <v-expand-transition>
       <div v-show="!isNewGame" class="joinGameScreen">
-        <h2 class="centerElement">Scan QR Code to Join!</h2>
+        <h2 class="centerElement">
+          Scan QR Code or use 
+          <span class="red--text">{{getJoinCode}}</span> 
+          to Join!
+        </h2>
         <qrcode-vue :value="getLocalHost" :size="getQRCodeSize" level="H" render-as="svg" class="QRDiv"/>
         <v-expand-transition>
           <div class="centerElement" v-show="players.length != 0">
@@ -31,6 +35,7 @@ import QrcodeVue from 'qrcode.vue'
 import { mapGetters, mapActions } from "vuex";
 
 export default {
+  name: 'HomeView',
   components: {QrcodeVue },
   data() {
     return {
@@ -41,6 +46,7 @@ export default {
     ...mapGetters([
       "getMongoServer",
       "getGameID",
+      "getJoinCode",
       "getCurrentUser"
     ]),
     isNewGame(){
@@ -49,14 +55,18 @@ export default {
       return false
     },
     getLocalHost() {
-      return "http://" + window.location.host;
+      return "http://" + window.location.host + "/PlayerView/" + this.getJoinCode;
     },
     getQRCodeSize() {
       return parseInt(window.innerHeight * .25);
     },
   },
   methods: {
-    ...mapActions(["setGameIDAction", "setCurrentUserAction"]),
+    ...mapActions([
+      "setGameIDAction", 
+      "setJoinCodeAction", 
+      "setCurrentUserAction"
+    ]),
     async getIpAddress()
     {
       return axios.get("http://"+this.getMongoServer.ip+":"+this.getMongoServer.port+"/getIP")
@@ -74,9 +84,29 @@ export default {
       })
       .catch(err => console.log(err));
     },
+    createJoinCode(length) {
+      let result = '';
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      const charactersLength = characters.length;
+      let counter = 0;
+      while (counter < length) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        counter += 1;
+      }
+      return result;
+    },
     createNewGame()
     {
-      this.setGameIDAction("e")
+      let joinCode = this.createJoinCode(5);
+      
+      axios.post("http://"+this.getMongoServer.ip+":"+this.getMongoServer.port+"/createGame", 
+      {
+        JoinCode: joinCode
+      })
+      .then((response) => {
+        this.setJoinCodeAction(joinCode);
+        this.setGameIDAction(response.data);
+      });
     }
   },
   created()

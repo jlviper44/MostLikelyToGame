@@ -16,7 +16,8 @@ export default new Vuetify({
             pink: "#F15BB5",
             yellow: "#FEE440",
             blue: "#00BBF9",
-            green: "#00E3C5"
+            green: "#00E0C2",
+            red: "#F7543B"
         }
     }
 }

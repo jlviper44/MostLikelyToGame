@@ -15,6 +15,14 @@
       </div>
 
       <v-spacer></v-spacer>
+      <div class="d-flex align-center" v-if="getJoinCode != ''">
+        <h3 class="black--text" v-if="isDarkText(currentColor)">
+          Join Code: {{getJoinCode}}
+        </h3>
+        <h3 class="white--text" v-else>
+          Join Code: {{getJoinCode}}
+        </h3>
+      </div>
     </v-app-bar>
 
     <v-main>
@@ -42,7 +50,8 @@ export default {
         "pink",
         "yellow",
         "blue",
-        "green"
+        "green",
+        "red"
       ],
       currentColor: ""
     }
@@ -51,11 +60,16 @@ export default {
     ...mapGetters([
       "getMongoServer",
       "getGameID",
+      "getJoinCode",
       "getCurrentUser"
-    ])
+    ]),
   },
   methods: {
-    ...mapActions(["setGameIDAction", "setCurrentUserAction"]),
+    ...mapActions([
+      "setGameIDAction", 
+      "setJoinCodeAction", 
+      "setCurrentUserAction"
+    ]),
     generateRandomColor()
     {
       this.currentColor =  this.colors[this.getRandomInt(this.colors.length)];

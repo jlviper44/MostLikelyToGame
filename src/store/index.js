@@ -9,6 +9,7 @@ const defaultState = {
     port: "3000"
   },
   gameID: "",
+  joinCode: "",
   currentUser: ""
 }
 
@@ -17,12 +18,17 @@ export default new Vuex.Store({
   getters: {
     getMongoServer: (state) => state.mongoServer,
     getGameID: (state) => state.gameID,
+    getJoinCode: (state) => state.joinCode,
     getCurrentUser: (state) => state.currentUser,
   },
   mutations: {
     setGameID(state, gameID)
     {
       state.gameID = gameID
+    },
+    setJoinCode(state, joinCode)
+    {
+      state.joinCode = joinCode
     },
     setCurrentUser(state, user)
     {
@@ -32,6 +38,9 @@ export default new Vuex.Store({
   actions: {
     setGameIDAction({commit}, gameID){
       commit("setGameID", gameID)
+    },
+    setJoinCodeAction({commit}, joinCode){
+      commit("setJoinCode", joinCode)
     },
     setCurrentUserAction({commit}, user){
       commit("setCurrentUser", user)
