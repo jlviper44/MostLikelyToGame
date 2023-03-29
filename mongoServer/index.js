@@ -26,7 +26,8 @@ db.on("error", (error) => {
 function createGame(req, res){
   var game = new GameModel({
     JoinCode: req.body.JoinCode,
-    IsGameRunning: true
+    IsGameRunning: true,
+    GameState: "WaitingForPlayers"
   });
   game.save()
   .then((Game) => {
@@ -34,21 +35,74 @@ function createGame(req, res){
   })
   .catch((err) => {
     console.error(err);
+    res.send("Error");
   });
 }
 
 function findGame(req, res)
 {
   var query = req.body;
-  GameModel.find(query)
+  if(Object.keys(query).includes("_id"))
+  {
+    GameModel.findById(query["_id"])
+    .then((Game) => {
+      res.send(Game)
+    })
+    .catch((err) => {
+      console.error(err);
+      res.send("Error");
+    });
+  }
+  else
+  {
+    GameModel.findOne(query)
+    .then((Game) => {
+      res.send(Game)
+    })
+    .catch((err) => {
+      console.error(err);
+      res.send("Error");
+    });
+  }
+}
+
+function updateGame(req, res)
+{
+  var id = req.body._id;
+  var update = req.body.update;
+  GameModel.findById(id)
   .then((Game) => {
-    res.send(Game)
+    for (const [key, value] of Object.entries(update)) {
+      Game[key] = value;
+    }
+    Game.save();
+    res.send("Successfully Updated!");
   })
   .catch((err) => {
     console.error(err);
+    res.send("Error");
   });
 }
 
+function addPlayerToGame(req, res)
+{
+  const ObjectId = mongoose.Types.ObjectId;
+  let gameID = req.body.gameID;
+  let player = req.body.player;
+  GameModel.findOne({_id:new ObjectId(gameID)})
+  .then((Game) => {
+    if(!Game.Players.includes(player))
+    {
+      Game.Players.push(player)
+    }
+    Game.save();
+    res.send("Success");
+  })
+  .catch((err) => {
+    console.error(err);
+    res.send("Error");
+  });
+}
 
 app.post("/createGame", (req, res) => {
   createGame(req, res);
@@ -56,6 +110,14 @@ app.post("/createGame", (req, res) => {
 
 app.post("/findGame", (req, res) => {
   findGame(req, res);
+});
+
+app.post("/updateGame", (req, res) => {
+  updateGame(req, res);
+});
+
+app.post("/addPlayerToGame", (req, res) => {
+  addPlayerToGame(req, res);
 });
 
 app.get("/getIP", (req, res) => {

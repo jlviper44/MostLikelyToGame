@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+// import createMultiTabState from 'vuex-multi-tab-state';
 
 Vue.use(Vuex)
 
+// console.log(window.location.hostname);
 const defaultState = {
   mongoServer: {
-    ip: "192.168.236.118",
+    ip: window.location.hostname,
     port: "3000"
   },
   gameID: "",
@@ -46,6 +48,7 @@ export default new Vuex.Store({
       commit("setCurrentUser", user)
     }
   },
-  modules: {
-  }
+  // plugins: [
+  //   createMultiTabState(),
+  // ],
 })

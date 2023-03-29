@@ -15,7 +15,7 @@
       </div>
 
       <v-spacer></v-spacer>
-      <div class="d-flex align-center" v-if="getJoinCode != ''">
+      <div class="d-flex align-center" v-if="getJoinCode != '' ">
         <h3 class="black--text" v-if="isDarkText(currentColor)">
           Join Code: {{getJoinCode}}
         </h3>
@@ -26,11 +26,7 @@
     </v-app-bar>
 
     <v-main>
-      <!-- <v-tabs> -->
-        
-      <!-- </v-tabs> -->
       <div class="container">
-
         <router-view/>
       </div>
     </v-main>
@@ -77,7 +73,6 @@ export default {
     getRandomInt(max) {
       return Math.floor(Math.random() * max);
     },
-    
     isDarkText(bgColor) {
       let c = this.$vuetify.theme.themes.light[bgColor]
       var color = (c.charAt(0) === '#') ? c.substring(1, 7) : c;
@@ -90,10 +85,23 @@ export default {
   },
   created()
   {
-    // console.log(window.location.host)
-    // this.getIpAddress();
     this.generateRandomColor();
-    // this.isDeviceHost();
+    // if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    //   this.$vuetify.theme.dark = true;
+    // }
+    // this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+  },
+  watch: {
+    // "window.matchMedia"()
+    // {
+    //   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    //     this.$vuetify.theme.dark = true;
+    //   }
+    //   else
+    //   {
+    //     this.$vuetify.theme.dark = false;
+    //   }
+    // }
   }
 };
 </script>

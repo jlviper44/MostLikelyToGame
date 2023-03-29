@@ -7,6 +7,11 @@ const Game = mongoose.Schema(
       type: Boolean,
       required: true
     },
+    // WaitingForPlayers, Question, Answer, FinalResults
+    GameState: {
+      type: String,
+      required: true
+    },
     CurrentQuestion: {
       type: String,
     },
